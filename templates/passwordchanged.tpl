@@ -36,29 +36,30 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group has-success has-feedback">
 				<label for="inputPassword" class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-						<input type="password" class="form-control" id="inputPassword" placeholder="Password" required name="password"/>
+						<input type="password" class="form-control" id="inputPassword" placeholder="Password" disabled/>
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
 					</div>
 				</div>
 			</div>
 			
-			<div class="form-group">
+			<div class="form-group has-success has-feedback">
 				<label for="inputConfirmPassword" class="col-sm-2 control-label">Confirm Password</label>
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-						<input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" required name="passwordConfirm"/>
+						<input type="password" class="form-control" id="inputConfirmPassword" placeholder="Password" disabled/>
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
 					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-primary">Reset Password</button>
-				</div>
+			
+			<div class="alert alert-success" role="alert">
+				<strong>Password Changed!</strong> Your password has been successfully changed! You may now log in.
 			</div>
 		</form>
     </div>

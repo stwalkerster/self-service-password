@@ -53,6 +53,11 @@ class LdapFunctions
             return false;   
         }
         
+        if(!$this->dnHasAttribute($entry, $userdn, $ldapAttributes['mail']))
+        {
+            return false;
+        }
+        
         $mailValues = ldap_get_values($this->connection, $entry, $ldapAttributes['mail']);
         unset($mailValues["count"]);
         $match = 0;
@@ -112,24 +117,27 @@ class LdapFunctions
         $email = $mailValues[0];
         $username = $usernameValues[0];
         
-        return array("mail" => $email, "username" => $username);
+        return array("mail" => $email, "username" => $username, "dn" => $userdn);
     }
     
-    public function deleteAttribute($entry, $dn, $attributeName)
+    public function dnHasAttribute($entry, $dn, $attributeName)
     {
         $attrs = ldap_get_attributes($this->connection, $entry);
         
-        $found = 0;
         for($i = 0; $i < $attrs["count"]; $i++)
         {
             if($attrs[$i] == $attributeName)
             {
-                $found = 1;
-                break;
+                return true;
             }
         }
         
-        if($found == 0)
+        return false;
+    }
+    
+    public function deleteAttribute($entry, $dn, $attributeName)
+    {
+        if(!$this->dnHasAttribute($entry, $dn, $attributeName))
         {
             return;
         }
@@ -192,6 +200,55 @@ class LdapFunctions
 
     public function setPassword($username, $password)
     {
-       
+        $data = array();
+        
+        
+        global $userFilter, $ldapBaseDn, $ldapAttributes;
+        
+        $ldap_filter = str_replace("{login}", $this->escape($username), $userFilter);
+        $searchResult = ldap_search($this->connection, $ldapBaseDn, $ldap_filter);
+        
+        if($searchResult === false)
+        {
+            throw new Exception(ldap_error($this->connection));   
+        }
+        
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        
+        $userdn = ldap_get_dn($this->connection, $entry);
+        
+        if($userdn === false)
+        {
+            return false;   
+        }
+        
+        $ocValues = ldap_get_values($this->connection, $entry, 'objectClass');
+        if (in_array('sambaSamAccount', $ocValues)) 
+        {
+            $data["sambaNTPassword"] = Password::samba($password);
+            $data["sambaPwdLastSet"] = time();
+        }
+        
+        if (in_array('shadowAccount', $ocValues))
+        {
+            $data["shadowLastChange"] = floor(time() / 86400);
+        }
+        
+        $data['userPassword'] = Password::ssha($password);
+     
+        $result = ldap_mod_replace($this->connection, $userdn, $data);
+        
+        if(!$result)
+        {
+            throw new Exception(ldap_error($this->connection));
+        }
+        
+        if(!in_array("passwordReset", $ocValues))
+        {
+            $data['objectClass'] = 'passwordReset';
+        }
+        
+        $this->deleteAttribute($entry, $userdn, "passwordResetHash");
+        $this->deleteAttribute($entry, $userdn, "passwordResetHashTimestamp");
     }
 }

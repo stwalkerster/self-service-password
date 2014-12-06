@@ -47,14 +47,26 @@ if($_GET['action'] == "reset2")
 {
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
+        if($_POST['password'] !== $_POST['passwordConfirm'])
+        {
+            throw new Exception("password mismatch");
+        }
+        
         $ldap = new LdapFunctions();
         $ldap->connect();
         
         // pull user with that passwordResetHash from directory
         $data = $ldap->findUserFromResetHash($_GET['x']);
         
-        $username = $data['username'];
-        $email = $data['mail'];
+        $dn = $data['username'];
+        
+        $ldap->setPassword($dn, $_POST['password']);
+        
+        
+        $smarty->assign("username", $data['username']);
+        $smarty->assign("email", $data['mail']);
+        $smarty->assign("dn", $data['dn']);
+        $smarty->display("templates/passwordchanged.tpl");
     }
     else
     {
@@ -64,15 +76,11 @@ if($_GET['action'] == "reset2")
         // pull user with that passwordResetHash from directory
         $data = $ldap->findUserFromResetHash($_GET['x']);
     
-        $username = $data['username'];
-        $email = $data['mail'];
         // show form
-    
-        $smarty->assign("username", $username);
-        $smarty->assign("email", $email);
+        $smarty->assign("username", $data['username']);
+        $smarty->assign("email", $data['mail']);
+        $smarty->assign("dn", $data['dn']);
         $smarty->display("templates/resetnew.tpl");
         return;
     }
 }
-
-?>
