@@ -29,12 +29,25 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="conf\" />
+    <Folder Include="css\" />
+    <Folder Include="fonts\" />
+    <Folder Include="js\" />
     <Folder Include="lang\" />
     <Folder Include="lib\" />
     <Folder Include="pages\" />
     <Folder Include="style\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\bootstrap-theme.css" />
+    <Content Include="css\bootstrap-theme.min.css" />
+    <Content Include="css\bootstrap.css" />
+    <Content Include="css\bootstrap.min.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="js\bootstrap.js" />
+    <Content Include="js\bootstrap.min.js" />
     <Content Include="style\accept.png" />
     <Content Include="style\email.png" />
     <Content Include="style\error.png" />
@@ -42,8 +55,6 @@
     <Content Include="style\favicon.ico" />
     <Content Include="style\help.png" />
     <Content Include="style\key.png" />
-    <Content Include="style\light.png" />
-    <Content Include="style\ltb-logo.png" />
     <Content Include="style\styles.css" />
     <Content Include="style\user_suit.png" />
   </ItemGroup>

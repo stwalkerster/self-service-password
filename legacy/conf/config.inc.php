@@ -152,7 +152,7 @@ $show_help = true;
 $lang ="en";
 
 # Logo
-$logo = "style/ltb-logo.png";
+$logo = "style/blocks-128.png";
 
 # Debug mode
 $debug = false;
