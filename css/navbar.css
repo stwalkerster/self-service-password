@@ -1,0 +1,17 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-brand {
+    background-image: url(../img/blocks-48.png);
+    background-repeat: no-repeat;
+    background-position-x: 5px;
+    background-size: 40px;
+    background-position-y: 5px;
+    padding-left: 52px;
+}

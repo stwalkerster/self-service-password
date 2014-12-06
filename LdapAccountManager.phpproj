@@ -8,6 +8,14 @@
     <RootNamespace>LdapAccountManager</RootNamespace>
     <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
     <AssemblyName>LdapAccountManager</AssemblyName>
+    <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+    <Server>Custom</Server>
+    <CustomServerUrl>http://localhost/lam/</CustomServerUrl>
+    <PublishEvent>None</PublishEvent>
+    <PHPDevAutoPort>True</PHPDevAutoPort>
+    <PHPDevPort>41013</PHPDevPort>
+    <PHPDevHostName>localhost</PHPDevHostName>
+    <IISProjectUrl>http://localhost:41013/</IISProjectUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -16,46 +24,62 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="conf\config.inc.php" />
+    <Compile Include="config.default.php" />
+    <Compile Include="config.local.php" />
     <Compile Include="index.php" />
-    <Compile Include="lang\en.inc.php" />
-    <Compile Include="lib\functions.inc.php" />
-    <Compile Include="pages\change.php" />
-    <Compile Include="pages\resetbyquestions.php" />
-    <Compile Include="pages\resetbytoken.php" />
-    <Compile Include="pages\sendsms.php" />
-    <Compile Include="pages\sendtoken.php" />
-    <Compile Include="pages\setquestions.php" />
+    <Compile Include="legacy\conf\config.inc.php" />
+    <Compile Include="legacy\index.php" />
+    <Compile Include="legacy\lang\en.inc.php" />
+    <Compile Include="legacy\lib\functions.inc.php" />
+    <Compile Include="legacy\pages\change.php" />
+    <Compile Include="legacy\pages\resetbyquestions.php" />
+    <Compile Include="legacy\pages\resetbytoken.php" />
+    <Compile Include="legacy\pages\sendsms.php" />
+    <Compile Include="legacy\pages\sendtoken.php" />
+    <Compile Include="legacy\pages\setquestions.php" />
+    <Compile Include="includes\Startup.php" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="conf\" />
+    <Folder Include="legacy\conf\" />
     <Folder Include="css\" />
     <Folder Include="fonts\" />
     <Folder Include="js\" />
-    <Folder Include="lang\" />
+    <Folder Include="legacy\lang\" />
+    <Folder Include="legacy\lib\" />
+    <Folder Include="legacy\" />
+    <Folder Include="legacy\pages\" />
+    <Folder Include="legacy\style\" />
     <Folder Include="lib\" />
-    <Folder Include="pages\" />
-    <Folder Include="style\" />
+    <Folder Include="lib\smarty\" />
+    <Folder Include="img\" />
+    <Folder Include="includes\" />
+    <Folder Include="templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap-theme.css" />
     <Content Include="css\bootstrap-theme.min.css" />
     <Content Include="css\bootstrap.css" />
     <Content Include="css\bootstrap.min.css" />
+    <Content Include="css\navbar.css" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="img\blocks-32.png" />
+    <Content Include="img\blocks-48.png" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
-    <Content Include="style\accept.png" />
-    <Content Include="style\email.png" />
-    <Content Include="style\error.png" />
-    <Content Include="style\exclamation.png" />
-    <Content Include="style\favicon.ico" />
-    <Content Include="style\help.png" />
-    <Content Include="style\key.png" />
-    <Content Include="style\styles.css" />
-    <Content Include="style\user_suit.png" />
+    <Content Include="legacy\style\accept.png" />
+    <Content Include="img\blocks-128.png" />
+    <Content Include="legacy\style\email.png" />
+    <Content Include="legacy\style\error.png" />
+    <Content Include="legacy\style\exclamation.png" />
+    <Content Include="img\favicon.ico" />
+    <Content Include="legacy\style\help.png" />
+    <Content Include="legacy\style\key.png" />
+    <Content Include="legacy\style\styles.css" />
+    <Content Include="legacy\style\user_suit.png" />
+    <Content Include="templates\main.tpl" />
+    <Content Include="templates\index.tpl" />
   </ItemGroup>
 </Project>
