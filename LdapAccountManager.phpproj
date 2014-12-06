@@ -26,6 +26,7 @@
   <ItemGroup>
     <Compile Include="config.default.php" />
     <Compile Include="config.local.php" />
+    <Compile Include="includes\LdapFunctions.php" />
     <Compile Include="index.php" />
     <Compile Include="legacy\conf\config.inc.php" />
     <Compile Include="legacy\index.php" />
@@ -79,7 +80,11 @@
     <Content Include="legacy\style\key.png" />
     <Content Include="legacy\style\styles.css" />
     <Content Include="legacy\style\user_suit.png" />
+    <Content Include="templates\reset.tpl" />
+    <Content Include="templates\resetcheckmail.tpl" />
+    <Content Include="templates\resetnew.tpl" />
     <Content Include="templates\main.tpl" />
     <Content Include="templates\index.tpl" />
+    <Content Include="templates\resetmail.tpl" />
   </ItemGroup>
 </Project>
