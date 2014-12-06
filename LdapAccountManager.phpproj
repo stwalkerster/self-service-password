@@ -15,4 +15,36 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="conf\config.inc.php" />
+    <Compile Include="index.php" />
+    <Compile Include="lang\en.inc.php" />
+    <Compile Include="lib\functions.inc.php" />
+    <Compile Include="pages\change.php" />
+    <Compile Include="pages\resetbyquestions.php" />
+    <Compile Include="pages\resetbytoken.php" />
+    <Compile Include="pages\sendsms.php" />
+    <Compile Include="pages\sendtoken.php" />
+    <Compile Include="pages\setquestions.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="conf\" />
+    <Folder Include="lang\" />
+    <Folder Include="lib\" />
+    <Folder Include="pages\" />
+    <Folder Include="style\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="style\accept.png" />
+    <Content Include="style\email.png" />
+    <Content Include="style\error.png" />
+    <Content Include="style\exclamation.png" />
+    <Content Include="style\favicon.ico" />
+    <Content Include="style\help.png" />
+    <Content Include="style\key.png" />
+    <Content Include="style\light.png" />
+    <Content Include="style\ltb-logo.png" />
+    <Content Include="style\styles.css" />
+    <Content Include="style\user_suit.png" />
+  </ItemGroup>
 </Project>

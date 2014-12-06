@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "LdapAccountManager", "LdapAccountManager\LdapAccountManager.phpproj", "{FF3BEA3E-C0DE-4DC2-9EBB-D91355AB4D81}"
+Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "LdapAccountManager", "LdapAccountManager.phpproj", "{FF3BEA3E-C0DE-4DC2-9EBB-D91355AB4D81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
