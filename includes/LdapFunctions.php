@@ -80,6 +80,35 @@ class LdapFunctions
         return true;
     }
     
+    public function userExists($username)
+    {
+        global $userFilter, $ldapBaseDn, $ldapAttributes;
+        
+        $ldap_filter = str_replace("{login}", $this->escape($username), $userFilter);
+        $searchResult = ldap_search($this->connection, $ldapBaseDn, $ldap_filter);
+        
+        if($searchResult === false)
+        {
+            throw new Exception(ldap_error($this->connection));   
+        }
+        
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        
+        if($entry == false)
+        {
+            return false;   
+        }
+        
+        $userdn = ldap_get_dn($this->connection, $entry);
+        
+        if($userdn == false)
+        {
+            return false;   
+        }
+        
+        return true;
+    }
+    
     public function findUserFromResetHash($hash)
     {
         global $resetFilter, $ldapBaseDn, $ldapAttributes;
@@ -250,5 +279,55 @@ class LdapFunctions
         
         $this->deleteAttribute($entry, $userdn, "passwordResetHash");
         $this->deleteAttribute($entry, $userdn, "passwordResetHashTimestamp");
+    }
+
+    public function createUser($username, $password, $givenName, $sn, $mail)
+    {
+        global $userBase, $ldapBaseDn;
+        
+        $data = array();
+        
+        $data['objectClass'] = array(	
+            "posixAccount" ,
+	        "ldapPublicKey",
+	        "passwordReset",
+	        "inetOrgPerson",
+	        "shadowAccount"
+        );
+
+        $data['uid']                = $this->escape($username);
+        $data['givenName']          = $this->escape($givenName);
+        $data['sn']                 = $this->escape($sn);
+        $data['mail']               = $this->escape($mail);
+                                    
+        $data['cn']                 = $this->escape($givenName) . ' ' . $this->escape($sn);
+        $data['gecos']              = $this->escape($username) . ',,,';
+        $data['displayName']        = $this->escape($username);
+        
+        $data['gidNumber']          = 65534;
+        $data['uidNumber']          = 65534;
+        $data['homeDirectory']      = '/home/' . $this->escape($username);
+        $data['loginShell']         = '/bin/false';
+        
+        $data['preferredLanguage']  = 'en';
+        
+        $data['shadowFlag']         = 0;
+        $data['shadowMin']          = 0;
+        $data['shadowWarning']      = 0;
+        $data['shadowInactive']     = 99999;
+        $data['shadowMax']          = 99999;
+        $data['shadowExpire']       = 99999;
+        
+        $data['shadowLastChange']   = 1;
+        $data['userPassword']       = "{SSHA}x";
+        
+        $success = ldap_add($this->connection, "uid=" . $this->escape($username) . "," . $userBase . "," . $ldapBaseDn, $data);
+        
+        if(!$success)
+        {
+            throw new Exception(ldap_error($this->connection));
+        }
+        
+        $this->setPassword($username, $password);
     }
 }

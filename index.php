@@ -9,6 +9,48 @@ if(!isset($_GET['action']))
     return;
 }
 
+if($_GET['action'] == 'create')
+{    
+    global $recaptchaSecret;
+    
+    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    {        
+        if($_POST['password'] !== $_POST['passwordConfirm'])
+        {
+            throw new Exception("password mismatch");
+        }
+        
+        $responseData = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$_POST['g-recaptcha-response']}&remoteip={$_SERVER['REMOTE_ADDR']}");
+        $response = json_decode($responseData);
+        
+        if(! $response->success)
+        {
+            throw new Exception("captcha wrong");
+        }
+        
+        $ldap = new LdapFunctions();
+        $ldap->connect();
+        
+        if($ldap->userExists($_POST['username']))
+        {
+            throw new Exception("user exists");   
+        }
+        
+        $ldap->createUser($_POST['username'], $_POST['password'], $_POST['givenName'],$_POST['sn'], $_POST['mail']);
+        
+        $smarty->assign("username", $_POST['username']);
+        $smarty->assign("givenName", $_POST['givenName']);
+        $smarty->assign("sn", $_POST['sn']);
+        $smarty->assign("mail", $_POST['mail']);
+        $smarty->display("templates/create/user-created.tpl");
+        
+    }
+    else
+    {
+        $smarty->display("templates/create/form.tpl");
+    }
+}
+
 if($_GET['action'] == "reset")
 {
     if($_SERVER['REQUEST_METHOD'] == 'POST')

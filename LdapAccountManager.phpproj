@@ -40,6 +40,7 @@
     <Folder Include="img\" />
     <Folder Include="includes\" />
     <Folder Include="templates\" />
+    <Folder Include="templates\create\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap-theme.css" />
@@ -57,6 +58,8 @@
     <Content Include="js\bootstrap.min.js" />
     <Content Include="img\blocks-128.png" />
     <Content Include="img\favicon.ico" />
+    <Content Include="templates\create\form.tpl" />
+    <Content Include="templates\create\user-created.tpl" />
     <Content Include="templates\passwordchanged.tpl" />
     <Content Include="templates\reset.tpl" />
     <Content Include="templates\resetcheckmail.tpl" />
