@@ -67,7 +67,7 @@
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<div class="input-group">
-						<div class="g-recaptcha" data-sitekey="6Ler7f4SAAAAAGtYKOCCG7uKKQX4bpQ85GfAaZqS"></div>
+						<div class="g-recaptcha" data-sitekey="{$recaptchaclientkey}"></div>
 					</div>
 				</div>
 			</div>

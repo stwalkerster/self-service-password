@@ -13,12 +13,13 @@ $ldapAttributes['username'] = 'uid';
 $ldapAttributes['mail']     = 'mail';
 $ldapAttributes['fullname'] = 'cn';
 
-$userFilter = "(&(objectClass=inetOrgPerson)({$ldapAttributes['username']}={login}))";
+$userFilter  = "(&(objectClass=inetOrgPerson)({$ldapAttributes['username']}={login}))";
 $resetFilter = "(&(objectClass=passwordReset)(passwordResetHash={hash}))";
 
 $userBase = "ou=People";
 
-$recaptchaSecret = "";
+$recaptchaSecret    = "";
+$recaptchaClientKey = "";
 
 // no more settings below here!
 global $smarty;
