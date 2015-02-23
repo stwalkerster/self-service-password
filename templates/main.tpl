@@ -58,7 +58,7 @@
       <hr />
 
       <footer>
-        <p>&copy; Simon Walker 2014</p>
+        <p>&copy; Simon Walker 2015</p>
       </footer>
 
     </div> <!-- /container -->
