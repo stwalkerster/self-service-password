@@ -8,27 +8,29 @@
 		<form class="form-horizontal" role="form" method="post">
 			<div class="form-group">
 				<label for="inputFirstName" class="col-sm-2 control-label">Given Name</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span></span>
 						<input type="text" class="form-control" id="inputFirstName" placeholder="Given Name" name="givenName"/>
 					</div>
 				</div>
+				<span id="helpBlock" class="col-sm-5 help-block">(optional)</span>
 			</div>
 						
 			<div class="form-group">
 				<label for="inputSurname" class="col-sm-2 control-label">Surname</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span></span>
 						<input type="text" class="form-control" id="inputSurname" placeholder="Surname" name="sn"/>
 					</div>
 				</div>
+				<span id="helpBlock" class="col-sm-5 help-block">(optional)</span>
 			</div>
 
 			<div class="form-group">
 				<label for="inputUsername" class="col-sm-2 control-label">Username</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
 						<input type="text" class="form-control" id="inputUsername" placeholder="Username" required name="username" />
@@ -37,7 +39,7 @@
 			</div>
 			<div class="form-group">
 				<label for="inputEmail" class="col-sm-2 control-label">Email Address</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
 						<input type="email" class="form-control" id="inputEmail" placeholder="Email" required name="mail" />
@@ -46,7 +48,7 @@
 			</div>
 			<div class="form-group">
 				<label for="inputPassword" class="col-sm-2 control-label">Password</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
 						<input type="password" class="form-control" id="inputPassword" placeholder="Password" required name="password"/>
@@ -56,7 +58,7 @@
 			
 			<div class="form-group">
 				<label for="inputConfirmPassword" class="col-sm-2 control-label">Confirm Password</label>
-				<div class="col-sm-10">
+				<div class="col-sm-5">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
 						<input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" required name="passwordConfirm"/>
