@@ -46,6 +46,10 @@
               <li><a href="https://jenkins.stwalkerster.co.uk/">Jenkins Build Server</a></li>
               <li><a href="https://gerrit.stwalkerster.co.uk/">Gerrit Code Review</a></li>
               <li><a href="https://jira.stwalkerster.co.uk/">JIRA Bug Tracker</a></li>
+			  {if $authenticated}
+				<li><a href="index.php?action=manage"><img src="https://secure.gravatar.com/avatar/{$gravatar}?s=20&d=identicon&r=pg" alt="avatar"/>&nbsp;<strong>{$name}</strong></a></li>
+				<li><a href="index.php?action=logout">Log out</a></li>
+			  {/if}
             </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->

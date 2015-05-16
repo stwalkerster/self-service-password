@@ -1,7 +1,7 @@
 ﻿{extends file="main.tpl"}
 {block name="content"}
 	<div class="page-header">
-		<h1>Create Account <small>Create an account for use on LDAP-connected services.</small></h1>
+		<h1>Manage Account <small>Manage your account on LDAP-connected services.</small></h1>
 	</div>
 
     <div class="row">
@@ -11,7 +11,7 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span></span>
-						<input type="text" class="form-control" id="inputFirstName" placeholder="Given Name" name="givenName"/>
+						<input type="text" class="form-control" id="inputFirstName" placeholder="Given Name" name="givenName" value="{$givenName}"/>
 					</div>
 				</div>
 			</div>
@@ -21,7 +21,7 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span></span>
-						<input type="text" class="form-control" id="inputSurname" placeholder="Surname" name="sn"/>
+						<input type="text" class="form-control" id="inputSurname" placeholder="Surname" name="sn" value="{$sn}"/>
 					</div>
 				</div>
 			</div>
@@ -31,7 +31,7 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-						<input type="text" class="form-control" id="inputUsername" placeholder="Username" required name="username" />
+						<input type="text" class="form-control" id="inputUsername" placeholder="Username" readonly name="username" value="{$username}"/>
 					</div>
 				</div>
 			</div>
@@ -40,7 +40,7 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
-						<input type="email" class="form-control" id="inputEmail" placeholder="Email" required name="mail" />
+						<input type="email" class="form-control" id="inputEmail" placeholder="Email" required name="mail" value="{$mail}" />
 					</div>
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-						<input type="password" class="form-control" id="inputPassword" placeholder="Password" required name="password"/>
+						<input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password"/>
 					</div>
 				</div>
 			</div>
@@ -59,22 +59,14 @@
 				<div class="col-sm-10">
 					<div class="input-group">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-						<input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" required name="passwordConfirm"/>
+						<input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" name="passwordConfirm"/>
 					</div>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<div class="input-group">
-						<div class="g-recaptcha" data-sitekey="{$recaptchaclientkey}"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-primary">Create Account</button>
+					<button type="submit" class="btn btn-primary">Update Account</button>
 				</div>
 			</div>
 

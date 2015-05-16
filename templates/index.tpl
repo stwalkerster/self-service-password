@@ -8,7 +8,7 @@
 		<p>New User? Create an account!</p>
         <div class="container">
 			<div class="row">
-				<div class="col-md-4"><a class="btn btn-lg btn-primary btn-block" href="index.php?action=login" role="button" disabled>Log in &raquo;</a></div>
+				<div class="col-md-4"><a class="btn btn-lg btn-primary btn-block" href="index.php?action=manage" role="button">{if $authenticated}Manage account{else}Log in{/if} &raquo;</a></div>
 				<div class="col-md-4"><a class="btn btn-lg btn-warning btn-block" href="index.php?action=reset" role="button">Reset password &raquo;</a></div>
 				<div class="col-md-4"><a class="btn btn-lg btn-success btn-block" href="index.php?action=create" role="button">Create Account &raquo;</a></div>
 			</div>

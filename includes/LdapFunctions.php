@@ -80,6 +80,93 @@ class LdapFunctions
         return true;
     }
     
+    public function findUserByName($username)
+    {
+        global $userFilter, $ldapBaseDn, $ldapAttributes;
+        
+        $ldap_filter = str_replace("{login}", $this->escape($username), $userFilter);
+        $searchResult = ldap_search($this->connection, $ldapBaseDn, $ldap_filter);
+        
+        if($searchResult === false)
+        {
+            throw new Exception(ldap_error($this->connection));   
+        }
+        
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        $userdn = ldap_get_dn($this->connection, $entry);
+        
+        if($userdn === false)
+        {
+            return false;   
+        }
+        
+        return true;
+    }
+    
+    public function getUserDn($username)
+    {
+        global $userFilter, $ldapBaseDn, $ldapAttributes;
+        
+        $ldap_filter = str_replace("{login}", $this->escape($username), $userFilter);
+        $searchResult = ldap_search($this->connection, $ldapBaseDn, $ldap_filter);
+        
+        if($searchResult === false)
+        {
+            throw new Exception(ldap_error($this->connection));   
+        }
+        
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        $userdn = ldap_get_dn($this->connection, $entry);
+        
+        if($userdn === false)
+        {
+            return false;   
+        }
+        
+        return $userdn;
+    }
+    
+    public function authenticate($username, $password)
+    {
+        global $userFilter, $ldapBaseDn, $ldapAttributes, $ldapHostname, $ldapPort;
+        
+        $ldap_filter = str_replace("{login}", $this->escape($username), $userFilter);
+        $searchResult = ldap_search($this->connection, $ldapBaseDn, $ldap_filter);
+        
+        if($searchResult === false)
+        {
+            throw new Exception(ldap_error($this->connection));   
+        }
+        
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        
+        if($entry == false)
+        {
+            return false;
+        }
+        
+        $userdn = ldap_get_dn($this->connection, $entry);
+        
+        if($userdn === false)
+        {
+            return false;   
+        }
+        
+        $authConnection = ldap_connect($ldapHostname, $ldapPort);
+        
+        ldap_set_option($authConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($authConnection, LDAP_OPT_REFERRALS, 0);
+        
+        $bind = @ldap_bind($authConnection, $userdn, $password);
+        
+        if(!$bind)
+        {
+            return false; 
+        }
+        
+        return $userdn;
+    }
+    
     public function userExists($username)
     {
         global $userFilter, $ldapBaseDn, $ldapAttributes;
@@ -296,15 +383,26 @@ class LdapFunctions
         );
 
         $data['uid']                = $this->escape($username);
-        $data['givenName']          = $this->escape($givenName);
+        
+        if($givenName != "")
+        {
+            $data['givenName']      = $this->escape($givenName);
+        }
+        
         $data['sn']                 = $this->escape($sn);
         $data['mail']               = $this->escape($mail);
-                                    
-        $data['cn']                 = $this->escape($givenName) . ' ' . $this->escape($sn);
+        
+        $cn = $this->escape($givenName) . ' ' . $this->escape($sn);
+        if($givenName == "")
+        {
+            $cn = $this->escape($sn);   
+        }
+        
+        $data['cn']                 = $cn;
         $data['gecos']              = $this->escape($username) . ',,,';
         $data['displayName']        = $this->escape($username);
         
-        $data['gidNumber']          = 65534;
+        $data['gidNumber']          = 10000;
         $data['uidNumber']          = 65534;
         $data['homeDirectory']      = '/home/' . $this->escape($username);
         $data['loginShell']         = '/bin/false';
@@ -329,5 +427,85 @@ class LdapFunctions
         }
         
         $this->setPassword($username, $password);
+    }
+
+    public function getUserAttribute($userdn, $attribute)
+    {        
+        $searchResult = ldap_read($this->connection, $userdn, "objectClass=*", array($attribute));
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        $values = @ldap_get_values($this->connection, $entry, $attribute);
+                
+        return $values;
+    }
+    
+    public function getFirstUserAttribute($userdn, $attribute)
+    {
+        $result = $this->getUserAttribute($userdn, $attribute);
+        
+        if($result['count'] == 0)
+        {
+            return null;
+        }
+        
+        return $result[0];
+    }
+
+    public function updateUser($userdn, $password, $givenName, $sn, $mail)
+    {
+        $searchResult = ldap_read($this->connection, $userdn, "objectClass=*");
+        $entry = ldap_first_entry($this->connection, $searchResult);
+        
+        $data = array();
+        $adddata = array();
+        
+        if($givenName == "")
+        {
+            if($this->dnHasAttribute($entry, $userdn, "givenName"))
+            {
+                ldap_mod_del($this->connection, $userdn, array("givenName" => array()));
+            }
+        }
+        else
+        {
+            //if($this->dnHasAttribute($entry, $userdn, "givenName"))
+            //{
+                $data['givenName'] = $this->escape($givenName);
+            //}
+            //else
+            //{
+            //    $adddata['givenName'] = $this->escape($givenName);
+            //}
+        }
+        
+        $data['sn'] = $this->escape($sn);
+        
+        $cn = $this->escape($givenName) . ' ' . $this->escape($sn);
+        if($givenName == "")
+        {
+            $cn = $this->escape($sn);   
+        }
+        
+        $data['cn'] = $cn;
+        
+        //if($this->dnHasAttribute($entry, $userdn, "mail"))
+        //{
+            $data['mail'] = $this->escape($mail);
+        //}
+        //else
+        //{
+        //    $adddata['mail'] = $this->escape($mail);
+        //}
+        
+        ldap_mod_replace($this->connection, $userdn, $data);
+        
+        //if(count($adddata) != 0)
+        //{
+        //    ldap_mod_add($this->connection, $userdn, $data);
+        //}
+        
+        if($password != "")
+        {
+            $this->setPassword($this->getFirstUserAttribute($userdn, "uid"), $password);
+        }
     }
 }

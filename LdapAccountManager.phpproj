@@ -10,7 +10,7 @@
     <AssemblyName>LdapAccountManager</AssemblyName>
     <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
     <Server>Custom</Server>
-    <CustomServerUrl>http://localhost/lam/</CustomServerUrl>
+    <CustomServerUrl>https://scimon.stwalkerster.net/lam/</CustomServerUrl>
     <PublishEvent>None</PublishEvent>
     <PHPDevAutoPort>True</PHPDevAutoPort>
     <PHPDevPort>41013</PHPDevPort>
@@ -41,6 +41,7 @@
     <Folder Include="includes\" />
     <Folder Include="templates\" />
     <Folder Include="templates\create\" />
+    <Folder Include="templates\login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap-theme.css" />
@@ -60,6 +61,8 @@
     <Content Include="img\favicon.ico" />
     <Content Include="templates\create\form.tpl" />
     <Content Include="templates\create\user-created.tpl" />
+    <Content Include="templates\login\form.tpl" />
+    <Content Include="templates\login\login.tpl" />
     <Content Include="templates\passwordchanged.tpl" />
     <Content Include="templates\reset.tpl" />
     <Content Include="templates\resetcheckmail.tpl" />

@@ -3,6 +3,17 @@ require_once('config.default.php');
 
 session_start();
 
+if(isset($_SESSION['authenticated']))
+{
+    $smarty->assign("authenticated", true);   
+    $smarty->assign("name", $_SESSION['name']);   
+    $smarty->assign("gravatar", $_SESSION['gravatar']);   
+}
+else
+{
+    $smarty->assign("authenticated", false);   
+}
+
 if(!isset($_GET['action'])) 
 {
     $smarty->display("templates/index.tpl");
@@ -36,12 +47,26 @@ if($_GET['action'] == 'create')
             throw new Exception("user exists");   
         }
         
-        $ldap->createUser($_POST['username'], $_POST['password'], $_POST['givenName'],$_POST['sn'], $_POST['mail']);
+        $sn = $_POST['sn'];
+        if($sn == "")
+        {
+            $sn = $_POST['username'];   
+        }
+        
+        $ldap->createUser($_POST['username'], $_POST['password'], $_POST['givenName'], $sn, $_POST['mail']);
         
         $smarty->assign("username", $_POST['username']);
         $smarty->assign("givenName", $_POST['givenName']);
-        $smarty->assign("sn", $_POST['sn']);
+        $smarty->assign("sn", $sn);
         $smarty->assign("mail", $_POST['mail']);
+        
+        $dn = $ldap->getUserDn($_POST['username']);
+        
+        $_SESSION['authenticated'] = true;
+        $_SESSION['name'] = $ldap->getFirstUserAttribute($dn, "cn");
+        $_SESSION['dn'] = $dn;
+        $_SESSION['gravatar'] = md5( strtolower( trim( $_POST['mail'] ) ) );
+        
         $smarty->display("templates/create/user-created.tpl");
         
     }
@@ -82,6 +107,94 @@ if($_GET['action'] == "reset")
     {   
         $smarty->display("templates/reset.tpl");
         return;
+    }
+}
+
+if($_GET['action'] == "manage")
+{
+    if(isset($_SESSION['authenticated']))
+    {
+        $ldap = new LdapFunctions();
+        $ldap->connect();
+        
+        $userdn = $_SESSION['dn'];
+        
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            if($_POST['password'] !== $_POST['passwordConfirm'])
+            {
+                throw new Exception("password mismatch");
+            }        
+            
+            $sn = $_POST['sn'];
+            if($sn == "")
+            {
+                $sn = $_POST['username'];   
+            }
+            
+            $ldap->updateUser($userdn, $_POST['password'], $_POST['givenName'], $sn, $_POST['mail']);
+
+            $fullname = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['fullname']);
+            $mail = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['mail']);
+
+            $_SESSION['name'] = $fullname;
+            $_SESSION['gravatar'] = md5( strtolower( trim( $mail ) ) );
+
+            header("Location: index.php?action=manage");
+            
+            return;
+        }
+        else
+        {
+            $username = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['username']);
+            $mail = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['mail']);
+            $givenName = $ldap->getFirstUserAttribute($userdn, 'givenName');
+            $sn = $ldap->getFirstUserAttribute($userdn, 'sn');
+            
+            $smarty->assign("username", $username);
+            $smarty->assign("givenName", $givenName);
+            $smarty->assign("sn", $sn);
+            $smarty->assign("mail", $mail);
+            
+            $smarty->display("templates/login/form.tpl");
+        }
+    }
+    else
+    {
+        if($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            $ldap = new LdapFunctions();
+            $ldap->connect();
+        
+            // search for matching user
+            $userdn = $ldap->authenticate($_POST['username'], $_POST['password']);
+        
+            if($userdn !== false)
+            {
+                $fullname = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['fullname']);
+                $mail = $ldap->getFirstUserAttribute($userdn, $ldapAttributes['mail']);
+            
+                $_SESSION['authenticated'] = true;
+                $_SESSION['name'] = $fullname;
+                $_SESSION['dn'] = $userdn;
+                $_SESSION['gravatar'] = md5( strtolower( trim( $mail ) ) );
+            
+                header("Location: index.php?action=manage");
+            
+                return;
+            }
+        
+            // show checkmail page
+            $smarty->assign("authFailed", true);
+            $smarty->display("templates/login/login.tpl");
+            return;
+        }
+        else
+        {   
+            $smarty->assign("authFailed", false);
+            $smarty->display("templates/login/login.tpl");
+            return;
+        }
     }
 }
 
@@ -126,3 +239,10 @@ if($_GET['action'] == "reset2")
         return;
     }
 }
+
+if($_GET['action'] == "logout")
+{
+    session_destroy();
+    header("Location: index.php");
+}
+
