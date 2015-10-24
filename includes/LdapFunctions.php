@@ -4,6 +4,15 @@ class LdapFunctions
 {
     private $connection;
     
+    /**
+     * Script usage only!
+     * @return resource
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
     public function connect()
     {
         global $ldapHostname, $ldapPort, $ldapBindDn, $ldapBindPw;
@@ -46,6 +55,12 @@ class LdapFunctions
         }
         
         $entry = ldap_first_entry($this->connection, $searchResult);
+
+        if($entry === false)
+        {
+            return false;
+        }
+
         $userdn = ldap_get_dn($this->connection, $entry);
         
         if($userdn === false)
@@ -345,10 +360,19 @@ class LdapFunctions
             $data["sambaPwdLastSet"] = time();
         }
         
-        if (in_array('shadowAccount', $ocValues))
+        if (!in_array('shadowAccount', $ocValues))
         {
-            $data["shadowLastChange"] = floor(time() / 86400);
+            ldap_mod_add($this->connection, $userdn, array('objectClass' => 'shadowAccount'));
+
+            $data['shadowFlag']         = 0;
+            $data['shadowMin']          = 0;
+            $data['shadowWarning']      = 0;
+            $data['shadowInactive']     = 99999;
+            $data['shadowMax']          = 99999;
+            $data['shadowExpire']       = 99999;
         }
+
+        $data["shadowLastChange"] = floor(time() / 86400);
         
         $data['userPassword'] = Password::ssha($password);
      
@@ -361,14 +385,14 @@ class LdapFunctions
         
         if(!in_array("passwordReset", $ocValues))
         {
-            $data['objectClass'] = 'passwordReset';
+            ldap_mod_add($this->connection, $userdn, array('objectClass' => 'passwordReset'));
         }
         
         $this->deleteAttribute($entry, $userdn, "passwordResetHash");
         $this->deleteAttribute($entry, $userdn, "passwordResetHashTimestamp");
     }
 
-    public function createUser($username, $password, $givenName, $sn, $mail)
+    public function createUser($username, $password, $givenName, $sn, $mail, $displayName)
     {
         global $userBase, $ldapBaseDn;
         
@@ -399,11 +423,11 @@ class LdapFunctions
         }
         
         $data['cn']                 = $cn;
-        $data['gecos']              = $this->escape($username) . ',,,';
-        $data['displayName']        = $this->escape($username);
+        $data['gecos']              = $this->escape($displayName) . ',,,';
+        $data['displayName']        = $this->escape($displayName);
         
         $data['gidNumber']          = 10000;
-        $data['uidNumber']          = 65534;
+        $data['uidNumber']          = $this->findLargestUidNumber();
         $data['homeDirectory']      = '/home/' . $this->escape($username);
         $data['loginShell']         = '/bin/false';
         
@@ -450,7 +474,7 @@ class LdapFunctions
         return $result[0];
     }
 
-    public function updateUser($userdn, $password, $givenName, $sn, $mail)
+    public function updateUser($userdn, $password, $givenName, $sn, $mail, $displayname)
     {
         $searchResult = ldap_read($this->connection, $userdn, "objectClass=*");
         $entry = ldap_first_entry($this->connection, $searchResult);
@@ -484,7 +508,7 @@ class LdapFunctions
         {
             $cn = $this->escape($sn);   
         }
-        
+       
         $data['cn'] = $cn;
         
         //if($this->dnHasAttribute($entry, $userdn, "mail"))
@@ -496,6 +520,9 @@ class LdapFunctions
         //    $adddata['mail'] = $this->escape($mail);
         //}
         
+        $data['displayName'] = $this->escape($displayname);
+        $data['gecos'] = $this->escape($displayname) . ',,,';
+
         ldap_mod_replace($this->connection, $userdn, $data);
         
         //if(count($adddata) != 0)
@@ -507,5 +534,55 @@ class LdapFunctions
         {
             $this->setPassword($this->getFirstUserAttribute($userdn, "uid"), $password);
         }
+    }
+
+    public function setSshKeys($userdn, $keys)
+    {
+        $objectClasses = $this->getUserAttribute($userdn, 'objectClass');
+        unset($objectClasses["count"]);
+        
+        $data = array();
+        
+        if(!in_array("ldapPublicKey", $objectClasses))
+        {
+            $data['objectClass'] = 'ldapPublicKey';
+            ldap_mod_add($this->connection, $userdn, $data);
+            $data = array();
+        }
+
+        $realkeys = explode("\n", $keys);
+        //array_walk($realkeys, $this->escape);
+
+        $data['sshPublicKey'] = $realkeys;
+        ldap_mod_replace($this->connection, $userdn, $data);
+    }
+
+    public function findLargestUidNumber($start = 10000, $end = 20000, $olduid = null)
+    {
+        global $ldapBaseDn;
+        $s = ldap_search($this->connection, $ldapBaseDn, 'uidnumber=*');
+        if ($s)
+        {
+            $biguid = $start;
+
+            $result = ldap_get_entries($this->connection, $s);
+            for ($i = 0; $i < $result['count']; $i++)
+            {
+            	$uid = $result[$i]['uidnumber'][0];
+
+                if ($olduid !== null && $uid == $olduid)
+                {
+                    continue;
+                }
+                
+                if ($uid < $end)
+                {
+                    $biguid = max($biguid, $uid);
+                }
+            }
+            
+            return $biguid;
+        }
+        return null;
     }
 }

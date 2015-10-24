@@ -9,10 +9,10 @@
     <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
     <AssemblyName>LdapAccountManager</AssemblyName>
     <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-    <Server>Custom</Server>
+    <Server>PHPDev</Server>
     <CustomServerUrl>https://scimon.stwalkerster.net/lam/</CustomServerUrl>
     <PublishEvent>None</PublishEvent>
-    <PHPDevAutoPort>True</PHPDevAutoPort>
+    <PHPDevAutoPort>False</PHPDevAutoPort>
     <PHPDevPort>41013</PHPDevPort>
     <PHPDevHostName>localhost</PHPDevHostName>
     <IISProjectUrl>http://localhost:41013/</IISProjectUrl>
@@ -26,10 +26,17 @@
   <ItemGroup>
     <Compile Include="config.default.php" />
     <Compile Include="config.local.php" />
+    <Compile Include="includes\ActionBase.php" />
+    <Compile Include="includes\ActionCreate.php" />
+    <Compile Include="includes\ActionManage.php" />
+    <Compile Include="includes\ActionReset.php" />
+    <Compile Include="includes\ActionReset2.php" />
+    <Compile Include="includes\IAction.php" />
     <Compile Include="includes\LdapFunctions.php" />
     <Compile Include="includes\Password.php" />
     <Compile Include="index.php" />
     <Compile Include="includes\Startup.php" />
+    <Compile Include="fixuids.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="css\" />
