@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="PHP Files" pattern="file[LdapAccountManager]:includes//*||file:index.php||file:config.local.php||file:config.default.php" />
+</component>

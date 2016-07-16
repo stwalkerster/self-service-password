@@ -3,6 +3,8 @@ require_once('config.default.php');
 
 session_start();
 
+global $smarty;
+
 if(isset($_SESSION['authenticated']))
 {
     $smarty->assign("authenticated", true);   
