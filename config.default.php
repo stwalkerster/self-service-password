@@ -25,7 +25,7 @@ $recaptchaClientKey = "";
 global $smarty;
 
 require_once('config.local.php');
-require_once('includes/Startup.php');
+require_once('vendor/autoload.php');
 
 Startup::InitialiseSmarty();
 

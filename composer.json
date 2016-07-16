@@ -1,0 +1,13 @@
+{
+  "description": "LDAP account manager for stwalkerster.net cluster",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Simon Walker",
+      "email": "github@stwalkerster.co.uk"
+    }
+  ],
+  "require": {
+    "smarty/smarty": "v3.1.29"
+  }
+}

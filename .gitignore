@@ -3,3 +3,8 @@ LdapAccountManager.phpproj.user
 LdapAccountManager.v12.suo
 templates_c/*
 .vs/*
+vendor/*
+
+.idea/workspace.xml
+.idea/tasks.xml
+*.iws
