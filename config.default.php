@@ -20,6 +20,7 @@ $userBase = "ou=People";
 
 $recaptchaSecret = "";
 $recaptchaClientKey = "";
+$useRecaptcha = true;
 
 // no more settings below here!
 global $smarty;

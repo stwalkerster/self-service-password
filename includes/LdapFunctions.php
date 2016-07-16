@@ -384,7 +384,7 @@ class LdapFunctions
         $data['displayName'] = $this->escape($displayName);
 
         $data['gidNumber'] = 10000;
-        $data['uidNumber'] = $this->findLargestUidNumber();
+        $data['uidNumber'] = $this->findLargestUidNumber() + 1;
         $data['homeDirectory'] = '/home/' . $this->escape($username);
         $data['loginShell'] = '/bin/false';
 

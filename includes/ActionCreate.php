@@ -4,17 +4,19 @@ class ActionCreate extends ActionBase implements IAction
 {
     protected function post()
     {
-        global $recaptchaSecret, $smarty;
+        global $recaptchaSecret, $smarty, $useRecaptcha;
 
         if ($_POST['password'] !== $_POST['passwordConfirm']) {
             throw new Exception("password mismatch");
         }
 
-        $responseData = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$_POST['g-recaptcha-response']}&remoteip={$_SERVER['REMOTE_ADDR']}");
-        $response = json_decode($responseData);
+        if ($useRecaptcha) {
+            $responseData = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$_POST['g-recaptcha-response']}&remoteip={$_SERVER['REMOTE_ADDR']}");
+            $response = json_decode($responseData);
 
-        if (!$response->success) {
-            throw new Exception("captcha wrong");
+            if (!$response->success) {
+                throw new Exception("captcha wrong");
+            }
         }
 
         $ldap = new LdapFunctions();
