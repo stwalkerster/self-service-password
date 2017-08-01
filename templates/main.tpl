@@ -43,9 +43,8 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="https://jenkins.stwalkerster.co.uk/">Jenkins Build Server</a></li>
-              <li><a href="https://gerrit.stwalkerster.co.uk/">Gerrit Code Review</a></li>
-              <li><a href="https://jira.stwalkerster.co.uk/">JIRA Bug Tracker</a></li>
+              <li><a href="https://jenkins.stwalkerster.co.uk/">Jenkins</a></li>
+              <li><a href="https://phabricator.stwalkerster.co.uk/">Phabricator</a></li>
 			  {if $authenticated}
 				<li><a href="index.php?action=manage"><img src="https://secure.gravatar.com/avatar/{$gravatar}?s=20&d=identicon&r=pg" alt="avatar"/>&nbsp;<strong>{$name}</strong></a></li>
 				<li><a href="index.php?action=logout">Log out</a></li>
